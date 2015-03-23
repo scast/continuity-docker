@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
 import yaml
+import os
 
 from fabric.api import env, task
 from dockermap.map.container import ContainerMap
+from dockermap.map.config import ClientConfiguration
 from .utils import ImageManager
 
 __author__ = 'Simon Castillo'
@@ -30,12 +32,19 @@ def load_environment(environment_name):
         environment['repository'] = repo
 
     env.environment = environment_name
+
+    if 'host' in environment:
+        for volume, path in environment['host'].items():
+            environment['host'][volume] = os.path.abspath(path)
+
     env.container_dict = environment
     env.container_prefix = prefix
     env.container_map = ContainerMap(prefix, environment,
                                      check_integrity=True)
-
-
+    env.container_config = ClientConfiguration(base_url=env.docker.base_url,
+                                               version=env.docker._version,
+                                               timeout=env.docker.timeout,
+                                               client=env.docker)
 
 
 def bootstrap_environment(name):
