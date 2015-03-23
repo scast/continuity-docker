@@ -12,13 +12,13 @@ __version__ = '0.1.0'
 
 def load_environment(environment_name):
     # Load up the images definitions
-    images_file = env.get('images_file', 'images.yaml')
+    images_file = env.get('images_file', './docker/images.yaml')
     with open(images_file, 'r') as f:
         env.images = yaml.safe_load(f)
         env.manager = ImageManager(env.images)
 
     # Load up the maps definitions and store the one in `name`
-    map_file = env.get('map_file', 'map.yaml')
+    map_file = env.get('map_file', './docker/map.yaml')
     with open(map_file, 'r') as f:
         data = yaml.safe_load(f)
         prefix = data['name']
