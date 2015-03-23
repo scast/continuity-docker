@@ -29,6 +29,7 @@ def load_environment(environment_name):
     if repo is not None:
         environment['repository'] = repo
 
+    env.environment = environment_name
     env.container_dict = environment
     env.container_prefix = prefix
     env.container_map = ContainerMap(prefix, environment,
