@@ -18,14 +18,18 @@ def build(action='check'):
     '''Step 1. Build artifacts (docker images) for all environments.'''
 
     force = action == 'force'
+    check_changed = action == 'check'
 
     with cd(env.project_path):
         remote, dest_branch = env.remote_ref.split('/', 1)
 
-        with hide('running', 'stdout'):
-            changed_files = env.run('git diff-index --cached --name-only '
-                                    '{working_ref}'.format(**env),
-                                    capture=True).splitlines()
+        changed_files = []
+
+        if check_changed:
+            with hide('running', 'stdout'):
+                changed_files = env.run('git diff-index --cached --name-only '
+                                        '{working_ref}'.format(**env),
+                                        capture=True).splitlines()
 
         with open('images_rebuilt', 'w') as f:
             for environment in env.manager.get_rebuild_steps('common',
