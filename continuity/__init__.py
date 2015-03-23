@@ -39,17 +39,4 @@ def load_environment(environment_name):
 
 
 def bootstrap_environment(name):
-    '''Returns a decorator that is in charge of setting up the `env`
-    global variable with the environment in `name`.'''
-
-
-
-    def decorator(task):
-        def func():
-            # Load the environment and then run the original task
-            load_environment(name)
-            task()
-
-        return func
-
-    return decorator
+    return load_environment(name)
